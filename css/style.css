@@ -219,7 +219,6 @@ header{
 }
 
 .hero-image img{
-    border-radius:50%;
     border:6px solid #00abf0;
     box-shadow:0 0 40px rgba(0,171,240,.5);
 }
@@ -913,5 +912,11 @@ to{
 
     .about-content p{
         font-size:13px;
+    }
+}
+
+@media (max-width:768px){
+    .hero-image img{
+        max-width: 220px;
     }
 }
