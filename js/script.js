@@ -1,58 +1,56 @@
-/*====================================
-    SMOOTH SCROLL
-====================================*/
+
+/*====================================*
+* SMOOTH SCROLL
+*====================================*/
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
-    anchor.addEventListener("click", function(e){
+    anchor.addEventListener("click", function (e) {
 
         e.preventDefault();
 
-        document.querySelector(this.getAttribute("href")).scrollIntoView({
+        const target = document.querySelector(
+            this.getAttribute("href")
+        );
 
-            behavior:"smooth"
-
-        });
+        if (target) {
+            target.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
 
     });
 
 });
 
 
-/*====================================
-    ACTIVE NAVIGATION
-====================================*/
+/*====================================*
+* ACTIVE NAVIGATION
+*====================================*/
 
 const sections = document.querySelectorAll("section");
-
 const navLinks = document.querySelectorAll(".nav-links a");
 
-window.addEventListener("scroll",()=>{
+window.addEventListener("scroll", () => {
 
-    let current="";
+    let current = "";
 
-    sections.forEach(section=>{
+    sections.forEach(section => {
 
-        const sectionTop=section.offsetTop-120;
+        const sectionTop = section.offsetTop - 120;
 
-        const sectionHeight=section.clientHeight;
-
-        if(pageYOffset>=sectionTop){
-
-            current=section.getAttribute("id");
-
+        if (window.scrollY >= sectionTop) {
+            current = section.getAttribute("id");
         }
 
     });
 
-    navLinks.forEach(link=>{
+    navLinks.forEach(link => {
 
         link.classList.remove("active");
 
-        if(link.getAttribute("href")==="#"+current){
-
+        if (link.getAttribute("href") === "#" + current) {
             link.classList.add("active");
-
         }
 
     });
@@ -60,261 +58,177 @@ window.addEventListener("scroll",()=>{
 });
 
 
-/*====================================
-    STICKY NAVBAR
-====================================*/
+/*====================================*
+* STICKY NAVBAR
+*====================================*/
 
-const header=document.querySelector("header");
+const header = document.querySelector("header");
 
-window.addEventListener("scroll",()=>{
+window.addEventListener("scroll", () => {
 
-    if(window.scrollY>50){
+    if (window.scrollY > 50) {
 
-        header.style.boxShadow="0 4px 20px rgba(0,0,0,.4)";
+        header.style.boxShadow =
+            "0 4px 20px rgba(0,0,0,.4)";
 
-    }
+    } else {
 
-    else{
-
-        header.style.boxShadow="none";
+        header.style.boxShadow = "none";
 
     }
 
 });
 
 
-/*====================================
-    SCROLL ANIMATION
-====================================*/
+/*====================================*
+* SCROLL ANIMATION
+*====================================*/
 
-const revealElements=document.querySelectorAll(
-
-".hero,.about,.skills,.education,.experience,.projects,.achievements,.certifications,.contact"
-
+const revealElements = document.querySelectorAll(
+    ".hero, .about, .skills, .education, .experience, .projects, .achievements, .contact"
 );
 
-function reveal(){
+function reveal() {
 
-    const trigger=window.innerHeight-120;
+    const trigger = window.innerHeight - 120;
 
-    revealElements.forEach(el=>{
+    revealElements.forEach(el => {
 
-        const top=el.getBoundingClientRect().top;
+        const top = el.getBoundingClientRect().top;
 
-        if(top<trigger){
-
+        if (top < trigger) {
             el.classList.add("show");
-
         }
 
     });
 
 }
 
-window.addEventListener("scroll",reveal);
+window.addEventListener("scroll", reveal);
 
 reveal();
 
 
-/*====================================
-    TYPING EFFECT
-====================================*/
+/*====================================*
+* CONTACT FORM
+*====================================*/
 
-const typing=document.querySelector(".hero-text h2");
+const form = document.querySelector("form");
 
-const words=[
+if (form) {
 
-"Python Developer",
+    form.addEventListener("submit", function (e) {
 
-"AI Enthusiast",
+        e.preventDefault();
 
-"Full Stack Developer",
+        const inputs = form.querySelectorAll("input, textarea");
 
-"Machine Learning Learner"
+        let valid = true;
 
-];
+        inputs.forEach(input => {
 
-let wordIndex=0;
+            if (input.value.trim() === "") {
 
-let charIndex=0;
+                valid = false;
+                input.style.border = "2px solid red";
 
-let currentWord="";
+            } else {
 
-let isDeleting=false;
+                input.style.border = "2px solid #00abf0";
 
-function type(){
+            }
 
-    currentWord=words[wordIndex];
+        });
 
-    if(isDeleting){
+        if (valid) {
 
-        typing.textContent=currentWord.substring(0,charIndex--);
+            alert("Thank you! Your message has been received.");
 
-    }
+            form.reset();
 
-    else{
-
-        typing.textContent=currentWord.substring(0,charIndex++);
-
-    }
-
-    if(!isDeleting && charIndex===currentWord.length){
-
-        isDeleting=true;
-
-        setTimeout(type,1000);
-
-        return;
-
-    }
-
-    if(isDeleting && charIndex===0){
-
-        isDeleting=false;
-
-        wordIndex++;
-
-        if(wordIndex===words.length){
-
-            wordIndex=0;
+            inputs.forEach(input => {
+                input.style.border = "none";
+            });
 
         }
 
-    }
-
-    setTimeout(type,isDeleting?60:120);
+    });
 
 }
 
-type();
 
+/*====================================*
+* BACK TO TOP BUTTON
+*====================================*/
 
-/*====================================
-    CONTACT FORM
-====================================*/
+const topBtn = document.createElement("button");
 
-const form=document.querySelector("form");
-
-form.addEventListener("submit",function(e){
-
-    e.preventDefault();
-
-    const inputs=form.querySelectorAll("input, textarea");
-
-    let valid=true;
-
-    inputs.forEach(input=>{
-
-        if(input.value.trim()===""){
-
-            valid=false;
-
-            input.style.border="2px solid red";
-
-        }
-
-        else{
-
-            input.style.border="2px solid #00abf0";
-
-        }
-
-    });
-
-    if(valid){
-
-        alert("Thank you! Your message has been received.");
-
-        form.reset();
-
-    }
-
-});
-
-
-/*====================================
-    BACK TO TOP BUTTON
-====================================*/
-
-const topBtn=document.createElement("button");
-
-topBtn.innerHTML="↑";
-
-topBtn.id="topBtn";
+topBtn.innerHTML = "↑";
+topBtn.id = "topBtn";
 
 document.body.appendChild(topBtn);
 
-topBtn.style.position="fixed";
-topBtn.style.bottom="30px";
-topBtn.style.right="30px";
-topBtn.style.width="50px";
-topBtn.style.height="50px";
-topBtn.style.borderRadius="50%";
-topBtn.style.border="none";
-topBtn.style.background="#00abf0";
-topBtn.style.color="#fff";
-topBtn.style.fontSize="22px";
-topBtn.style.cursor="pointer";
-topBtn.style.display="none";
-topBtn.style.zIndex="999";
 
-window.addEventListener("scroll",()=>{
+/* Button Styling */
 
-    if(window.scrollY>500){
+topBtn.style.position = "fixed";
+topBtn.style.bottom = "30px";
+topBtn.style.right = "30px";
+topBtn.style.width = "50px";
+topBtn.style.height = "50px";
+topBtn.style.borderRadius = "50%";
+topBtn.style.border = "none";
+topBtn.style.background = "#00abf0";
+topBtn.style.color = "#fff";
+topBtn.style.fontSize = "22px";
+topBtn.style.cursor = "pointer";
+topBtn.style.display = "none";
+topBtn.style.zIndex = "999";
 
-        topBtn.style.display="block";
 
-    }
+/* Show / Hide Button */
 
-    else{
+window.addEventListener("scroll", () => {
 
-        topBtn.style.display="none";
+    if (window.scrollY > 500) {
+
+        topBtn.style.display = "block";
+
+    } else {
+
+        topBtn.style.display = "none";
 
     }
 
 });
 
-topBtn.addEventListener("click",()=>{
+
+/* Back To Top */
+
+topBtn.addEventListener("click", () => {
 
     window.scrollTo({
-
-        top:0,
-
-        behavior:"smooth"
-
+        top: 0,
+        behavior: "smooth"
     });
 
 });
 
 
-/*====================================
-    FADE-IN EFFECT
-====================================*/
+/*====================================*
+* IMPORTANT
+*====================================*
+*
+* TYPING EFFECT HAS BEEN REMOVED.
+*
+* There is NO:
+* - setTimeout()
+* - setInterval()
+* - typing effect
+* - deleting effect
+* - changing words
+*
+* The hero text in index.html will remain STATIC.
+*
+*====================================*/
 
-const observer=new IntersectionObserver(entries=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-
-            entry.target.style.opacity="1";
-
-            entry.target.style.transform="translateY(0)";
-
-        }
-
-    });
-
-});
-
-document.querySelectorAll("section").forEach(section=>{
-
-    section.style.opacity="0";
-
-    section.style.transform="translateY(40px)";
-
-    section.style.transition=".8s";
-
-    observer.observe(section);
-
-});
