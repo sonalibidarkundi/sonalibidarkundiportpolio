@@ -1,106 +1,137 @@
-
-/*====================================*
-* SMOOTH SCROLL
-*====================================*/
-
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-
-    anchor.addEventListener("click", function (e) {
-
-        e.preventDefault();
-
-        const target = document.querySelector(
-            this.getAttribute("href")
-        );
-
-        if (target) {
-            target.scrollIntoView({
-                behavior: "smooth"
-            });
-        }
-
-    });
-
-});
+anchor.addEventListener("click", function (e) {
+const targetId = this.getAttribute("href");
 
 
-/*====================================*
-* ACTIVE NAVIGATION
-*====================================*/
-
-const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll(".nav-links a");
-
-window.addEventListener("scroll", () => {
-
-    let current = "";
-
-    sections.forEach(section => {
-
-        const sectionTop = section.offsetTop - 120;
-
-        if (window.scrollY >= sectionTop) {
-            current = section.getAttribute("id");
-        }
-
-    });
-
-    navLinks.forEach(link => {
-
-        link.classList.remove("active");
-
-        if (link.getAttribute("href") === "#" + current) {
-            link.classList.add("active");
-        }
-
-    });
-
-});
-
-
-/*====================================*
-* STICKY NAVBAR
-*====================================*/
-
-const header = document.querySelector("header");
-
-window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 50) {
-
-        header.style.boxShadow =
-            "0 4px 20px rgba(0,0,0,.4)";
-
-    } else {
-
-        header.style.boxShadow = "none";
-
+    if (!targetId || targetId === "#") {
+        return;
     }
 
+    const target = document.querySelector(targetId);
+
+    if (target) {
+        e.preventDefault();
+
+        target.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    }
+});
+
+});
+
+const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
+
+if (menuToggle && navLinks) {
+menuToggle.addEventListener("click", () => {
+navLinks.classList.toggle("active");
+
+
+    const icon = menuToggle.querySelector("i");
+
+    if (navLinks.classList.contains("active")) {
+        icon.classList.remove("fa-bars");
+        icon.classList.add("fa-xmark");
+    } else {
+        icon.classList.remove("fa-xmark");
+        icon.classList.add("fa-bars");
+    }
+});
+
+navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+        navLinks.classList.remove("active");
+
+        const icon = menuToggle.querySelector("i");
+
+        icon.classList.remove("fa-xmark");
+        icon.classList.add("fa-bars");
+    });
+});
+
+document.addEventListener("click", event => {
+    if (
+        !navLinks.contains(event.target) &&
+        !menuToggle.contains(event.target)
+    ) {
+        navLinks.classList.remove("active");
+
+        const icon = menuToggle.querySelector("i");
+
+        icon.classList.remove("fa-xmark");
+        icon.classList.add("fa-bars");
+    }
 });
 
 
-/*====================================*
-* SCROLL ANIMATION
-*====================================*/
+}
+
+const sections = document.querySelectorAll("section");
+const navigationLinks = document.querySelectorAll(".nav-links a");
+
+function updateActiveNavigation() {
+let current = "";
+
+
+sections.forEach(section => {
+    const sectionTop = section.offsetTop - 150;
+
+    if (window.scrollY >= sectionTop) {
+        current = section.getAttribute("id");
+    }
+});
+
+navigationLinks.forEach(link => {
+    link.classList.remove("active");
+
+    if (link.getAttribute("href") === "#" + current) {
+        link.classList.add("active");
+    }
+});
+
+
+}
+
+window.addEventListener("scroll", updateActiveNavigation);
+
+updateActiveNavigation();
+
+const header = document.getElementById("header");
+
+window.addEventListener("scroll", () => {
+if (!header) {
+return;
+}
+
+
+if (window.scrollY > 50) {
+    header.style.boxShadow =
+        "0 4px 20px rgba(0, 0, 0, 0.10)";
+} else {
+    header.style.boxShadow = "none";
+}
+
+
+});
 
 const revealElements = document.querySelectorAll(
-    ".hero, .about, .skills, .education, .experience, .projects, .achievements, .contact"
+".hero, .about, .skills, .education, .experience, .projects, .achievements, .contact"
 );
 
 function reveal() {
+const trigger = window.innerHeight - 120;
 
-    const trigger = window.innerHeight - 120;
 
-    revealElements.forEach(el => {
+revealElements.forEach(element => {
+    const top = element.getBoundingClientRect().top;
 
-        const top = el.getBoundingClientRect().top;
+    if (top < trigger) {
+        element.classList.add("show");
+    }
+});
 
-        if (top < trigger) {
-            el.classList.add("show");
-        }
-
-    });
 
 }
 
@@ -108,127 +139,65 @@ window.addEventListener("scroll", reveal);
 
 reveal();
 
-
-/*====================================*
-* CONTACT FORM
-*====================================*/
-
-const form = document.querySelector("form");
+const form = document.getElementById("contact-form");
 
 if (form) {
+form.addEventListener("submit", function (e) {
+e.preventDefault();
 
-    form.addEventListener("submit", function (e) {
 
-        e.preventDefault();
+    const inputs = form.querySelectorAll("input, textarea");
+    let valid = true;
 
-        const inputs = form.querySelectorAll("input, textarea");
-
-        let valid = true;
-
-        inputs.forEach(input => {
-
-            if (input.value.trim() === "") {
-
-                valid = false;
-                input.style.border = "2px solid red";
-
-            } else {
-
-                input.style.border = "2px solid #00abf0";
-
-            }
-
-        });
-
-        if (valid) {
-
-            alert("Thank you! Your message has been received.");
-
-            form.reset();
-
-            inputs.forEach(input => {
-                input.style.border = "none";
-            });
-
+    inputs.forEach(input => {
+        if (input.value.trim() === "") {
+            valid = false;
+            input.style.border = "2px solid #dc3545";
+        } else {
+            input.style.border = "2px solid #b8860b";
         }
-
     });
 
+    if (valid) {
+        alert("Thank you! Your message has been received.");
+
+        form.reset();
+
+        inputs.forEach(input => {
+            input.style.border = "1px solid #dedbd2";
+        });
+    }
+});
+
+
 }
-
-
-/*====================================*
-* BACK TO TOP BUTTON
-*====================================*/
 
 const topBtn = document.createElement("button");
 
 topBtn.innerHTML = "↑";
 topBtn.id = "topBtn";
+topBtn.setAttribute("aria-label", "Back to top");
 
 document.body.appendChild(topBtn);
 
-
-/* Button Styling */
-
-topBtn.style.position = "fixed";
-topBtn.style.bottom = "30px";
-topBtn.style.right = "30px";
-topBtn.style.width = "50px";
-topBtn.style.height = "50px";
-topBtn.style.borderRadius = "50%";
-topBtn.style.border = "none";
-topBtn.style.background = "#00abf0";
-topBtn.style.color = "#fff";
-topBtn.style.fontSize = "22px";
-topBtn.style.cursor = "pointer";
-topBtn.style.display = "none";
-topBtn.style.zIndex = "999";
-
-
-/* Show / Hide Button */
-
 window.addEventListener("scroll", () => {
-
-    if (window.scrollY > 500) {
-
-        topBtn.style.display = "block";
-
-    } else {
-
-        topBtn.style.display = "none";
-
-    }
-
+if (window.scrollY > 500) {
+topBtn.style.display = "flex";
+topBtn.style.justifyContent = "center";
+topBtn.style.alignItems = "center";
+} else {
+topBtn.style.display = "none";
+}
 });
-
-
-/* Back To Top */
 
 topBtn.addEventListener("click", () => {
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-
+window.scrollTo({
+top: 0,
+behavior: "smooth"
+});
 });
 
-
-/*====================================*
-* IMPORTANT
-*====================================*
-*
-* TYPING EFFECT HAS BEEN REMOVED.
-*
-* There is NO:
-* - setTimeout()
-* - setInterval()
-* - typing effect
-* - deleting effect
-* - changing words
-*
-* The hero text in index.html will remain STATIC.
-*
-*====================================*/
-
+window.addEventListener("load", () => {
+updateActiveNavigation();
+reveal();
+});
